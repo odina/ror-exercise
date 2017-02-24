@@ -32,11 +32,11 @@ ActiveRecord::Schema.define(version: 20170224054306) do
 
   create_table "questions_web_surveys", force: :cascade do |t|
     t.integer "question_id"
-    t.integer "web_surveys_id"
+    t.integer "web_survey_id"
   end
 
   add_index "questions_web_surveys", ["question_id"], name: "index_questions_web_surveys_on_question_id", using: :btree
-  add_index "questions_web_surveys", ["web_surveys_id"], name: "index_questions_web_surveys_on_web_surveys_id", using: :btree
+  add_index "questions_web_surveys", ["web_survey_id"], name: "index_questions_web_surveys_on_web_survey_id", using: :btree
 
   create_table "responses", force: :cascade do |t|
     t.integer  "web_survey_id"

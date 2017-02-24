@@ -25,9 +25,10 @@ ActiveRecord::Schema.define(version: 20170224054306) do
 
   create_table "questions", force: :cascade do |t|
     t.string   "question"
-    t.boolean  "is_default", default: false
-    t.datetime "created_at",                 null: false
-    t.datetime "updated_at",                 null: false
+    t.integer  "question_type", default: 1
+    t.boolean  "is_default",    default: false
+    t.datetime "created_at",                    null: false
+    t.datetime "updated_at",                    null: false
   end
 
   create_table "questions_web_surveys", force: :cascade do |t|

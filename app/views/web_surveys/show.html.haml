@@ -1,1 +1,26 @@
-Survey: #{@web_survey.title}
+%h2
+  = @web_survey.title.presence || 'Untitled Survey'
+%br/
+
+#new-response
+  = form_for :response do |f|
+    .form-group.row
+      .col-sm-2
+        = f.label 'Your name', class: "control-label"
+
+      .col-sm-6
+        = f.text_field :name, autofocus: true, class: 'form-control'
+
+    - @web_survey.questions.each do |q|
+      .form-group.row
+        .col-sm-2
+          = f.label q.question, class: "control-label"
+
+          - if q.is_default?
+            <span class="required">*</span>
+
+        .col-sm-6
+          - if q.type == 'text_area'
+            = f.text_area "answer-{q.id}", class: 'form-control'
+          - else
+            = f.text_field "answer-{q.id}", class: 'form-control'

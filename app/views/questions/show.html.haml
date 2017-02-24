@@ -1,0 +1,10 @@
+%p#notice= notice
+%p
+  %strong Question:
+  = @question.question
+%p
+  %strong Is default:
+  = @question.is_default
+= link_to 'Edit', edit_question_path(@question)
+|
+= link_to 'Back', questions_path

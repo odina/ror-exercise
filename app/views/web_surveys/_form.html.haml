@@ -1,0 +1,19 @@
+= form_for(@web_survey) do |f|
+  - if @web_survey.errors.any?
+    #error_explanation
+      %h2
+        = pluralize(@web_survey.errors.count, "error")
+        prohibited this web_survey from being saved:
+      %ul
+        - @web_survey.errors.full_messages.each do |message|
+          %li= message
+  .field
+    = f.label :title
+    %br/
+    = f.text_field :title
+  .field
+    = f.label :shortlink_slug
+    %br/
+    = f.text_field :shortlink_slug
+  .actions
+    = f.submit

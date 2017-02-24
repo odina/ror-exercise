@@ -1,0 +1,10 @@
+%p#notice= notice
+%p
+  %strong Title:
+  = @web_survey.title
+%p
+  %strong Shortlink slug:
+  = @web_survey.shortlink_slug
+= link_to 'Edit', edit_web_survey_path(@web_survey)
+|
+= link_to 'Back', web_surveys_path

@@ -1,3 +1,21 @@
 // Place all the styles related to the Users controller here.
 // They will automatically be included in application.css.
 // You can use Sass (SCSS) here: http://sass-lang.com/
+
+#login {
+  background: white;
+  border-radius: 5px;
+  padding: 0;
+
+  .login-header {
+    background: #e8e8e8;
+    font-size: 14px;
+    font-weight: bold;
+    padding: 5px 8px;
+    text-transform: uppercase;
+  }
+
+  .login-body {
+    padding: 15px;
+  }
+}

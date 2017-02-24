@@ -20,3 +20,13 @@
 body {
   background: #f2f2f2;
 }
+
+.flash-message {
+  &.error {
+    color: red;
+  }
+
+  &.success {
+    color: green;
+  }
+}

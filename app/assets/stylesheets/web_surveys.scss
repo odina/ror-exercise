@@ -2,6 +2,14 @@
 // They will automatically be included in application.css.
 // You can use Sass (SCSS) here: http://sass-lang.com/
 
-.required {
-  color: red;
+#new-response {
+  sup {
+    font-size: 12px;
+  }
+
+  .question-by-admin {
+    &:hover {
+      opacity: 0.8
+    }
+  }
 }

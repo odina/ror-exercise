@@ -1,6 +1,6 @@
 class WebSurvey < ActiveRecord::Base
   belongs_to :user
-
+  has_many :responses
   has_many :questions_web_surveys
   has_many :questions, through: :questions_web_surveys
 

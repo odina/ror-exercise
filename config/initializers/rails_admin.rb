@@ -1,41 +1,87 @@
 RailsAdmin.config do |config|
-
-  ### Popular gems integration
-
-  ## == Devise ==
   config.authenticate_with do
     warden.authenticate! scope: :user
   end
   config.current_user_method(&:current_user)
 
-  ## == Cancan ==
-  # config.authorize_with :cancan
-
-  ## == Pundit ==
-  # config.authorize_with :pundit
-
-  ## == PaperTrail ==
-  # config.audit_with :paper_trail, 'User', 'PaperTrail::Version' # PaperTrail >= 3.0.0
-
-  ### More at https://github.com/sferik/rails_admin/wiki/Base-configuration
-
-  ## == Gravatar integration ==
-  ## To disable Gravatar integration in Navigation Bar set to false
-  # config.show_gravatar true
-
   config.actions do
-    dashboard                     # mandatory
-    index                         # mandatory
+    # export
+
+    dashboard do
+      only ['Response', 'WebSurvey']
+    end
+
+    index do
+      only ['Response', 'WebSurvey']
+    end
+
     new
-    export
     bulk_delete
+
     show
     edit
     delete
-    show_in_app
 
-    ## With an audit adapter, you can add:
-    # history_index
-    # history_show
+    show_in_app
+  end
+
+  config.model 'Question' do
+    edit do
+      exclude_fields :answers,
+                     :is_default,
+                     :questions_web_surveys,
+                     :web_surveys
+
+      field :question_type, :enum do
+        enum do
+          [['Up to 255 chars',1],['Long answer',2]]
+        end
+      end
+    end
+  end
+
+  config.model 'Response' do
+    edit do
+      exclude_fields :web_survey
+    end
+
+    list do
+      exclude_fields :id, :answers
+    end
+
+    show do
+      field :name
+
+      field :answers do
+        pretty_value do
+          bindings[:view].render(
+            partial: "formatted_answers",
+            locals: { response: bindings[:object] }
+          )
+        end
+
+
+        # pretty_value do
+        #   answers = bindings[:object].answers
+        #
+        #   qa = ''
+        #
+        #   answers.each do |answer|
+        #     partial :formatted_answers, locals: { answer: answer }
+        #   end
+        #
+        #   qa
+        # end
+      end
+    end
+  end
+
+  config.model 'WebSurvey' do
+    edit do
+      exclude_fields :shortlink_slug,
+                     :responses,
+                     :questions_web_surveys,
+                     :user
+    end
   end
 end

@@ -7,7 +7,12 @@ class WebSurveyController < ApplicationController
       @web_survey.questions.each { |q| @response.answers.build(question: q) }
     else
       @response = @web_survey.responses.build response_params
-      @response.save!
+
+      if @response.save
+        flash[:success] = 'Your answers have been submitted!'
+      else
+        flash[:error] = @response.errors.full_messages
+      end
     end
   end
 

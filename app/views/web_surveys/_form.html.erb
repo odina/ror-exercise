@@ -1,0 +1,25 @@
+<%= form_for(@web_survey) do |f| %>
+  <% if @web_survey.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@web_survey.errors.count, "error") %> prohibited this web_survey from being saved:</h2>
+
+      <ul>
+      <% @web_survey.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= f.label :title %><br>
+    <%= f.text_field :title %>
+  </div>
+  <div class="field">
+    <%= f.label :shortlink_slug %><br>
+    <%= f.text_field :shortlink_slug %>
+  </div>
+  <div class="actions">
+    <%= f.submit %>
+  </div>
+<% end %>

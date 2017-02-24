@@ -1,0 +1,29 @@
+<p id="notice"><%= notice %></p>
+
+<h1>Listing Web Surveys</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>Title</th>
+      <th>Shortlink slug</th>
+      <th colspan="3"></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @web_surveys.each do |web_survey| %>
+      <tr>
+        <td><%= web_survey.title %></td>
+        <td><%= web_survey.shortlink_slug %></td>
+        <td><%= link_to 'Show', web_survey %></td>
+        <td><%= link_to 'Edit', edit_web_survey_path(web_survey) %></td>
+        <td><%= link_to 'Destroy', web_survey, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+
+<%= link_to 'New Web survey', new_web_survey_path %>

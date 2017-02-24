@@ -5,11 +5,5 @@ Rails.application.routes.draw do
 
   root 'welcome#index'
 
-  # resources :answers
-  # resources :responses
-  # resources :questions
-  # resources :web_surveys
-  # resources :users
-
   devise_for :users, controllers: { sessions: 'users/sessions' }
 end

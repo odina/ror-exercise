@@ -1,31 +1,36 @@
-%h2
-  = @web_survey.title.presence || 'Untitled Survey'
-%br/
+#survey.row
+  .survey-container.col-xs-3
+    .survey-header
+      = @web_survey.title.presence || 'Untitled Survey'
 
-#new-response
-  = form_for @response, url: answer_web_survey_path, method: :POST do |f|
-    .form-group.row
-      .col-sm-2
-        = f.label 'Your name (Optional)', class: "control-label"
 
-      .col-sm-6
-        = f.text_field :name, autofocus: true, class: 'form-control'
+    .survey-body
+      = form_for @response, url: answer_web_survey_path, method: :POST do |f|
+        .form-group.row
+          .col-sm-3
+            = f.label 'Your name (Optional)', class: "control-label"
 
-    = f.fields_for :answers, @response.answers do |g|
-      .form-group.row
-        .col-sm-2
-          = g.label g.object.question.question, class: "control-label"
+          .col-sm-9
+            = f.text_field :name, autofocus: true, class: 'form-control'
 
-          - if not g.object.question.is_default?
-            <sup class="question-by-admin glyphicon glyphicon-info-sign" data-toggle='tooltip' title='This question was added by the administrator'></sup>
+        = f.fields_for :answers, @response.answers do |g|
+          .form-group.row
+            .col-sm-3
+              = g.label g.object.question.question, class: "control-label"
 
-        .col-sm-6
-          - if g.object.question.type == 'text_area'
-            = g.text_area :answer, class: 'form-control'
-          - else
-            = g.text_field :answer, class: 'form-control'
+              - if not g.object.question.is_default?
+                <sup class="question-by-admin glyphicon glyphicon-info-sign" data-toggle='tooltip' title='This question was added by the administrator'></sup>
 
-      = g.hidden_field :question_id, value: g.object.question.id
+            .col-sm-9
+              - if g.object.question.type == 'text_area'
+                = g.text_area :answer, class: 'form-control'
+              - else
+                = g.text_field :answer, class: 'form-control'
 
-    .actions
-      = f.submit "Respond"
+          = g.hidden_field :question_id, value: g.object.question.id
+
+        .form-group.row.actions
+          = f.submit "Respond", class: 'btn btn-primary'
+
+    .survey-subtext
+      © Powered by Web Survey

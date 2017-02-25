@@ -14,3 +14,12 @@
 //= require jquery_ujs
 //= require turbolinks
 //= require_tree .
+//
+
+$(document).on('ready', function() {
+  $('.flash-message').fadeIn(1000);
+
+  setTimeout(function() {
+    $('.flash-message').fadeOut();
+  }, 6000);
+});

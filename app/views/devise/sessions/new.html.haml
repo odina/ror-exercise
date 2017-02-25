@@ -1,24 +1,28 @@
-#login.col-md-6.center-block
-  .login-header Log in
+#login.row
+  .login-container.col-xs-3
+    .login-header
+      Sign In to Web Survey
 
-  .login-body
-    = form_for(resource, as: resource_name, url: session_path(resource_name), html: {class: 'form-horizontal'}) do |f|
-      .form-group
-        = f.label :email, class: "col-sm-2 control-label"
-
-        .col-sm-6
-          = f.email_field :email, autofocus: true, class: 'form-control'
-
-      .form-group
-        = f.label :password, class: "col-sm-2 control-label"
-
-        .col-sm-6
-          = f.password_field :password, autocomplete: "off", class: 'form-control'
-
-      - if devise_mapping.rememberable?
+    .login-body
+      = form_for(resource, as: resource_name, url: session_path(resource_name), html: {class: 'form-horizontal'}) do |f|
         .form-group
-          .col-sm-6.col-sm-offset-2
-            = f.check_box :remember_me
-            = f.label :remember_me
-      .actions
-        = f.submit "Log in"
+          = f.label :email, class: "col-sm-3 control-label"
+
+          .col-sm-8
+            = f.email_field :email, autofocus: true, class: 'form-control'
+
+        .form-group
+          = f.label :password, class: "col-sm-3 control-label"
+
+          .col-sm-8
+            = f.password_field :password, autocomplete: "off", class: 'form-control'
+
+        - if devise_mapping.rememberable?
+          .form-group
+            .col-sm-8.col-sm-offset-3
+              = f.check_box :remember_me
+              = f.label :remember_me
+
+        .form-group
+          .actions.col-sm-10.col-sm-offset-1
+            = f.submit "Sign in", class: 'btn btn-primary'

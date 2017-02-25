@@ -17,16 +17,32 @@
 @import "bootstrap-sprockets";
 @import "bootstrap";
 
+html, body {
+  height: 100%;
+}
+
 body {
   background: #f2f2f2;
+
+  .main-content {
+    height: 100%;
+  }
 }
 
 .flash-message {
+  background: #feffce;
+  display: none; // will fade in c/o js
+  left: 0;
+  padding: 15px;
+  position: absolute;
+  top: 0;
+  width: 100%;
+
   &.error {
-    color: red;
+    background: #f9d6d6;
   }
 
   &.success {
-    color: green;
+    background: #d1ffc4;
   }
 }

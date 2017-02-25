@@ -2,7 +2,11 @@
 // They will automatically be included in application.css.
 // You can use Sass (SCSS) here: http://sass-lang.com/
 
-#new-response {
+#survey {
+  align-items: center;
+  display: flex;
+  height: 100%;
+
   sup {
     font-size: 12px;
   }
@@ -11,5 +15,42 @@
     &:hover {
       opacity: 0.8
     }
+  }
+
+  .survey-container {
+    margin: auto;
+    padding: 0;
+  }
+
+  .survey-header {
+    background: #337ab7;
+    color: white;
+    font-family: 'Baloo', cursive;
+    font-size: 24px;
+    padding: 8px 15px;
+  }
+
+  .survey-body {
+    background: white;
+    padding: 15px;
+
+    label {
+      font-size: 12px;
+    }
+
+    .actions {
+      text-align: center;
+
+      input[type=submit] {
+        font-family: 'Baloo', cursive;
+        width: 80%;
+      }
+    }
+  }
+
+  .survey-subtext {
+    font-size: 9px;
+    text-align: right;
+    padding: 8px 0;
   }
 }

@@ -5,7 +5,10 @@ Rails.application.routes.draw do
 
   root 'welcome#index'
 
-  match 'web_survey/:slug' => 'web_survey#answer', as: :answer_web_survey, via: [:get, :post]
+
+  match 'web_survey/:slug' => 'web_survey#answer',
+        as: :answer_web_survey,
+        via: [:get, :post]
 
   devise_for :users, controllers: { sessions: 'users/sessions' }
 end

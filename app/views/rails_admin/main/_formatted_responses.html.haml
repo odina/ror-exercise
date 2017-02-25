@@ -1,0 +1,8 @@
+- web_survey.responses.each_with_index do |response, index|
+  %p
+    %b
+      = link_to "#{index+1}. #{response.name.presence || 'No Name'}", "/admin/response/#{response.id}"
+
+    %span
+      %i
+        = response.answers.map { |a| a.answer[0..20] + "..." }.join(",")

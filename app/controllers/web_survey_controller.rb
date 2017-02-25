@@ -4,7 +4,7 @@ class WebSurveyController < ApplicationController
     @response = @web_survey.responses.build
 
     if request.get?
-      @web_survey.questions.each { |q| @response.answers.build(question: q) }
+      @web_survey.questions.ordered.each { |q| @response.answers.build(question: q) }
     else
       @response = @web_survey.responses.build response_params
 

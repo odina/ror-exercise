@@ -4,6 +4,8 @@ RailsAdmin.config do |config|
   end
   config.current_user_method(&:current_user)
 
+  config.authorize_with :cancan
+
   config.actions do
     # export
 
@@ -15,11 +17,20 @@ RailsAdmin.config do |config|
       only ['Response', 'WebSurvey']
     end
 
-    new
+    new do
+      except ['Response']
+    end
+
     bulk_delete
 
-    show
-    edit
+    show do
+      only ['Response', 'WebSurvey']
+    end
+
+    edit do
+      except ['Response']
+    end
+
     delete
 
     show_in_app
@@ -41,12 +52,17 @@ RailsAdmin.config do |config|
   end
 
   config.model 'Response' do
-    edit do
-      exclude_fields :web_survey
-    end
-
     list do
-      exclude_fields :id, :answers
+      include_fields :web_survey,
+                     :name,
+                     :created_at
+
+      field :name do
+        pretty_value do
+          path = "/admin/response/#{bindings[:object].id}"
+          bindings[:view].content_tag :a, "#{bindings[:object].name}" , href: path, target: '_blank'
+        end
+      end
     end
 
     show do
@@ -59,29 +75,67 @@ RailsAdmin.config do |config|
             locals: { response: bindings[:object] }
           )
         end
-
-
-        # pretty_value do
-        #   answers = bindings[:object].answers
-        #
-        #   qa = ''
-        #
-        #   answers.each do |answer|
-        #     partial :formatted_answers, locals: { answer: answer }
-        #   end
-        #
-        #   qa
-        # end
       end
     end
   end
 
   config.model 'WebSurvey' do
+    list do
+      include_fields :title,
+                     :created_at
+
+      field :shortlink_slug do
+        pretty_value do
+          path = "/web_survey/#{bindings[:object].shortlink_slug}"
+          bindings[:view].content_tag :a, "#{bindings[:object].shortlink_slug}" , href: path, target: '_blank'
+        end
+      end
+
+    end
+
     edit do
-      exclude_fields :shortlink_slug,
-                     :responses,
-                     :questions_web_surveys,
-                     :user
+      include_fields :title,
+                     :questions
+
+      # Don't include default questions in options
+      field :questions do
+        associated_collection_scope do
+          web_survey = bindings[:objects]
+          Proc.new { |scope|
+            scope = scope.where(is_default: false)
+          }
+        end
+      end
+    end
+
+    show do
+      field :title
+
+      field :shortlink_slug do
+        pretty_value do
+          path = "/web_survey/#{bindings[:object].shortlink_slug}"
+          bindings[:view].content_tag :a, "#{bindings[:object].shortlink_slug}" , href: path, target: '_blank'
+        end
+      end
+
+      field :responses do
+        pretty_value do
+          bindings[:view].render(
+            partial: "formatted_responses",
+            locals: { web_survey: bindings[:object] }
+          )
+        end
+      end
+    end
+  end
+
+  config.model 'User' do
+    edit do
+      include_fields :username,
+                     :email,
+                     :is_admin,
+                     :password,
+                     :password_confirmation
     end
   end
 end

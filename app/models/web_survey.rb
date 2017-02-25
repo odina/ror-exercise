@@ -1,22 +1,34 @@
 class WebSurvey < ActiveRecord::Base
   belongs_to :user
-  has_many :responses
-  has_many :questions_web_surveys
-  has_many :questions, through: :questions_web_surveys
+  has_many :responses, dependent: :destroy
+  has_many :questions_web_surveys, dependent: :destroy
+  has_many :questions, -> { uniq }, through: :questions_web_surveys
 
   after_create :generate_slug
+  after_save :save_default_questions
 
-  private
-  def generate_slug
-    self.shortlink_slug = slug_or_random self.title
-    self.save!
+  validate :max_2_custom_questions
+
+  def max_2_custom_questions
+    if self.questions.count > 2
+      errors.add :questions, "can't be more than 2"
+    end
   end
 
-  def slug_or_random(title)
-    if title.blank?
+  private
+
+  def save_default_questions
+    default_questions = Question.where is_default: true
+    default_questions.each { |q| self.questions << q }
+  end
+
+  def generate_slug
+    self.shortlink_slug = if self.title.blank?
       (0...10).map { ('a'..'z').to_a[rand(26)] }.join + "-%s"
     else
       title[0..30].downcase.gsub(/[^a-z1-9]+/, '-').chomp('-') + "-%s"
     end % Time.now.to_i.to_s # make it as unique as possible
+
+    self.save!
   end
 end

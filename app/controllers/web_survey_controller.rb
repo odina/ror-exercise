@@ -23,8 +23,7 @@ class WebSurveyController < ApplicationController
 
   private
   def response_params
-    params.require(:response).permit(:name,
-                                      answers_attributes: [:question_id, :answer],
-                                      respondent_attributes: [:name])
+    params.require(:response).permit(answers_attributes: [:question_id, :answer],
+                                     respondent_attributes: [:name])
   end
 end

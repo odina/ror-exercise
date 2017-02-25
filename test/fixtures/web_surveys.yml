@@ -1,9 +1,5 @@
 # Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
 
 one:
-  title: MyString
-  shortlink_slug: MyString
-
-two:
-  title: MyString
-  shortlink_slug: MyString
+  title: 'Survey #1'
+  user_id: 1

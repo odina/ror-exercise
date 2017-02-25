@@ -1,9 +1,21 @@
 # Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
 
 one:
-  question: MyString
-  is_default: false
+  id: 1
+  question: 'Yes?'
+  is_default: true
 
 two:
-  question: MyString
+  id: 2
+  question: 'No?'
+  is_default: false
+
+three:
+  id: 3
+  question: 'Maybe?'
+  is_default: false
+
+four:
+  id: 4
+  question: 'Sometimes?'
   is_default: false

@@ -1,9 +1,11 @@
 # Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
 
 one:
-  username: MyString
-  is_admin: false
+  username: one
+  email: one@nowhere.com
+  is_admin: true
 
 two:
-  username: MyString
-  is_admin: false
+  username: two
+  email: two@nowhere.com
+  is_admin: true

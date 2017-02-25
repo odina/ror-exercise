@@ -6,12 +6,13 @@
 
     .survey-body
       = form_for @response, url: answer_web_survey_path, method: :POST do |f|
-        .form-group.row
-          .col-sm-3
-            = f.label 'Your name (Optional)', class: "control-label"
+        = f.fields_for :respondent, Respondent.new do |r|
+          .form-group.row
+            .col-sm-3
+              = r.label 'Your name (Optional)', class: "control-label"
 
-          .col-sm-9
-            = f.text_field :name, autofocus: true, class: 'form-control'
+            .col-sm-9
+              = r.text_field :name, autofocus: true, class: 'form-control'
 
         = f.fields_for :answers, @response.answers do |g|
           .form-group.row

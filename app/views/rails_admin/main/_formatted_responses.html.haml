@@ -1,7 +1,7 @@
 - web_survey.responses.each_with_index do |response, index|
   %p
     %b
-      = link_to "#{index+1}. #{response.name.presence || 'No Name'}", "/admin/response/#{response.id}"
+      = link_to "#{index+1}. #{response.respondent.name || 'No Name'}", "/admin/response/#{response.id}", target: '_blank'
 
     %span
       %i

@@ -10,11 +10,11 @@ RailsAdmin.config do |config|
     # export
 
     dashboard do
-      only ['Response', 'WebSurvey', 'Question', 'User']
+      only ['Respondent', 'Response', 'WebSurvey', 'Question', 'User']
     end
 
     index do
-      only ['Response', 'WebSurvey', 'Question', 'User']
+      only ['Respondent', 'Response', 'WebSurvey', 'Question', 'User']
     end
 
     new do
@@ -34,6 +34,26 @@ RailsAdmin.config do |config|
     delete
 
     show_in_app
+  end
+
+  config.model 'Respondent' do
+    navigation_label 'Surveys'
+    weight -1
+
+    list do
+      include_fields :name,
+                     :created_at
+
+      field :name do
+        pretty_value do
+          responses = bindings[:object].responses
+          response_id = responses.first ? responses.first.id : ''
+
+          path = "/admin/response/#{response_id}"
+          bindings[:view].content_tag :a, "#{bindings[:object].name}" , href: path
+        end
+      end
+    end
   end
 
   config.model 'Question' do
@@ -58,21 +78,25 @@ RailsAdmin.config do |config|
   end
 
   config.model 'Response' do
+    configure :name do
+      pretty_value do
+        path = "/admin/response/#{bindings[:object].id}"
+        bindings[:view].content_tag :a, "#{bindings[:object].respondent.name}" , href: path, target: '_blank'
+      end
+
+      read_only true
+    end
+
     list do
       include_fields :web_survey,
                      :name,
                      :created_at
-
-      field :name do
-        pretty_value do
-          path = "/admin/response/#{bindings[:object].id}"
-          bindings[:view].content_tag :a, "#{bindings[:object].name}" , href: path, target: '_blank'
-        end
-      end
     end
 
     show do
-      field :name
+      field :name do
+        formatted_value{ bindings[:object].respondent.name }
+      end
 
       field :answers do
         pretty_value do

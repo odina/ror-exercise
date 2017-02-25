@@ -10,6 +10,7 @@ class WebSurveyController < ApplicationController
 
         if @response.save
           flash[:success] = 'Your answers have been submitted!'
+          redirect_to root_path
         else
           flash[:error] = @response.errors.full_messages.to_sentence
         end

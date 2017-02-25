@@ -10,11 +10,11 @@ RailsAdmin.config do |config|
     # export
 
     dashboard do
-      only ['Response', 'WebSurvey']
+      only ['Response', 'WebSurvey', 'Question', 'User']
     end
 
     index do
-      only ['Response', 'WebSurvey']
+      only ['Response', 'WebSurvey', 'Question', 'User']
     end
 
     new do
@@ -37,6 +37,12 @@ RailsAdmin.config do |config|
   end
 
   config.model 'Question' do
+    list do
+      include_fields :question,
+                     :is_default,
+                     :created_at
+    end
+
     edit do
       exclude_fields :answers,
                      :is_default,
@@ -80,8 +86,21 @@ RailsAdmin.config do |config|
   end
 
   config.model 'WebSurvey' do
+    navigation_label 'Surveys'
+    weight -1
+
+    configure :response_count do
+      pretty_value do
+        path = "/admin/web_survey/#{bindings[:object].id}"
+        bindings[:view].content_tag :a, "#{bindings[:object].responses.count} responses" , href: path
+      end
+
+      read_only true
+    end
+
     list do
       include_fields :title,
+                     :response_count,
                      :created_at
 
       field :shortlink_slug do

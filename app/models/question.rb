@@ -4,6 +4,7 @@ class Question < ActiveRecord::Base
   has_many :answers
 
   scope :ordered, -> { order('id') }
+  scope :non_default, -> { where(is_default: false) }
 
   QUESTION_TYPES = {
     1 => 'text_field',

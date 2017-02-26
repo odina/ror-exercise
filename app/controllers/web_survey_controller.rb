@@ -1,6 +1,8 @@
 class WebSurveyController < ApplicationController
   def answer
-    if @web_survey = WebSurvey.with_slug(params[:slug])
+    @web_survey = WebSurvey.with_slug(params[:slug])
+
+    if @web_survey
       @response = @web_survey.responses.build
 
       if request.get?

@@ -10,10 +10,14 @@ class WebSurvey < ActiveRecord::Base
   validate :max_2_custom_questions
   validates_uniqueness_of :shortlink_slug
 
-  scope :with_slug, -> (slug) { where(shortlink_slug: slug).first }
+  scope :all_with_slug, -> (slug) { where(shortlink_slug: slug) }
+
+  def self.with_slug(slug)
+    self.all_with_slug(slug).first
+  end
 
   def max_2_custom_questions
-    if self.questions.count > 2
+    if self.questions.non_default.count > 2
       errors.add :questions, "can't be more than 2"
     end
   end

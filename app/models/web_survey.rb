@@ -8,6 +8,9 @@ class WebSurvey < ActiveRecord::Base
   after_save :save_default_questions
 
   validate :max_2_custom_questions
+  validates_uniqueness_of :shortlink_slug
+
+  scope :with_slug, -> (slug) { where(shortlink_slug: slug).first }
 
   def max_2_custom_questions
     if self.questions.count > 2
@@ -23,12 +26,10 @@ class WebSurvey < ActiveRecord::Base
   end
 
   def generate_slug
-    self.shortlink_slug = if self.title.blank?
-      (0...10).map { ('a'..'z').to_a[rand(26)] }.join + "-%s"
-    else
-      title[0..30].downcase.gsub(/[^a-z1-9]+/, '-').chomp('-') + "-%s"
-    end % Time.now.to_i.to_s # make it as unique as possible
+    slug = self.title.presence || ''
+    slug += "-%s" % SecureRandom.hex
 
+    self.shortlink_slug = slug
     self.save!
   end
 end

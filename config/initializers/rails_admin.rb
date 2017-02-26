@@ -124,7 +124,7 @@ RailsAdmin.config do |config|
       end
     end
 
-    configure :preview_questions do
+    configure :survey_preview do
       pretty_value do
         bindings[:view].render(
           partial: "web_survey_new_questions",
@@ -141,11 +141,11 @@ RailsAdmin.config do |config|
     end
 
     edit do
-      include_fields :preview_questions
+      include_fields :survey_preview
     end
 
     create do
-      include_fields :preview_questions
+      include_fields :survey_preview
 
       fields do
         help false

@@ -1,7 +1,7 @@
 == README
 
 ## Database Design
-![alt tag](http://i.imgur.com/SUycgtQ.png)
+![alt tag](http://i.imgur.com/9QMQVjR.png)
 
 ## App Screenshots
 

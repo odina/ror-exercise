@@ -14,4 +14,11 @@ class Response < ActiveRecord::Base
   def respondent_attributes=(attributes)
     self.respondent = Respondent.new attributes
   end
+
+  def respondent_name
+    respondent.name
+  end
+
+  # For use in rails_admin
+  def name; self.respondent_name.presence || '(No Name)' ; end
 end

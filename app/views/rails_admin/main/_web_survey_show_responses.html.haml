@@ -1,0 +1,38 @@
+- responses = web_survey.responses.joins(:respondent).order('respondents.name')
+
+%i.response-help-text
+  Click on the respondent's names to show their answers
+
+- responses.each_with_index do |response, index|
+
+  %p
+    %b
+      - name = response.respondent.name.presence || '(No Name)'
+      = link_to "#{index+1}. #{name}", 'javascript:void(0);', class: 'respondent', 'response-id': response.id
+
+    %div{ id: "answers-for-#{response.id}", class: 'answers', style: 'display:none;' }
+      - response.answers.each do |answer|
+        %p
+          %b
+            = answer.question.question
+        %p
+          = answer.answer
+
+:javascript
+  $('.respondent').click(function() {
+    var responseId = $(this).attr('response-id');
+
+    $('.answers').hide();
+    $("#answers-for-"+responseId).toggle();
+  });
+
+:css
+  .answers {
+    background: white;
+    padding: 15px;
+  }
+
+  .response-help-text {
+    font-size: 11px;
+    padding: 25px 0;
+  }

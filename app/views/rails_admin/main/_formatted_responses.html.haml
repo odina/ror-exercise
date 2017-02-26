@@ -1,8 +1,0 @@
-- web_survey.responses.each_with_index do |response, index|
-  %p
-    %b
-      = link_to "#{index+1}. #{response.respondent.name || 'No Name'}", "/admin/response/#{response.id}", target: '_blank'
-
-    %span
-      %i
-        = response.answers.map { |a| a.answer[0..20] + "..." }.join(",")

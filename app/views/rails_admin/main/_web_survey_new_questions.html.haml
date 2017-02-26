@@ -1,0 +1,86 @@
+#preview-questions
+  .title
+    Untitled Survey
+
+  .body
+    #questions
+      - questions = Question.default + web_survey.questions.non_default
+      - questions.each do |question|
+        - question_klass = question.is_default? ? 'default' : 'non-default'
+        %div.question{ class: question_klass }
+          .form-group.row
+            .col-sm-3
+              %b= question.question
+            .col-sm-9
+              = text_field_tag :test, '', disabled: 'disabled'
+
+
+:javascript
+  function updateBasedOffSelect(item) {
+    var select = $(item).find('.ra-multiselect-right select')[0];
+    var questions = [];
+
+    $(select).find('option').each(function(q) {
+      questions.push($(this).text());
+    });
+
+    $('.question.non-default').remove();
+
+    $.each(questions, function(i) {
+      var question = questions[i];
+
+      var qdiv =
+        "<div class='question non-default'>" +
+          "<div class='form-group row'>" +
+            "<div class='col-sm-3'>" +
+              "<b>"+question+"</b>" +
+            "</div>" +
+            "<div class='col-sm-9'>" +
+              "<input type='text' name='test' id='test' value='' disabled='disabled' />" +
+            "</div>" +
+          "</div>" +
+        "</div>";
+
+      $('#questions').append(qdiv);
+    });
+  }
+
+  $(document).on('ready', function() {
+    // initial run
+    updateBasedOffSelect('.has_many_association_type.questions_field');
+  });
+
+  $('input#web_survey_title').keyup(function() {
+    $('#preview-questions .title').text($(this).val());
+  });
+
+  $('.has_many_association_type.questions_field').on('change', function() {
+    updateBasedOffSelect(this);
+  });
+
+:css
+  #preview-questions {
+    text-align: left;
+    width: 50%;
+  }
+
+  #preview-questions .body {
+    background: #f2f2f2;
+    padding: 15px;
+  }
+
+  #preview-questions .body p {
+    font-size: 12px;
+  }
+
+  #preview-questions .title {
+    background: #337ab7;
+    color: white;
+    font-size: 23px;
+    font-weight: bold;
+    padding: 8px 15px;
+  }
+
+  #preview-questions .form-group input {
+    width: 100%;
+  }

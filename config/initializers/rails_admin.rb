@@ -7,68 +7,27 @@ RailsAdmin.config do |config|
   config.authorize_with :cancan
 
   config.actions do
-    # export
+    SUPPORTED = ['Respondent', 'WebSurvey']
 
-    dashboard do
-      only ['Respondent', 'Response', 'WebSurvey', 'Question', 'User']
-    end
-
-    index do
-      only ['Respondent', 'Response', 'WebSurvey', 'Question', 'User']
-    end
-
-    new do
-      except ['Response']
-    end
-
-    bulk_delete
-
-    show do
-      only ['Response', 'WebSurvey']
-    end
-
-    edit do
-      except ['Response']
-    end
+    dashboard { only SUPPORTED }
+    index { only SUPPORTED }
+    new { only ['Question', 'WebSurvey'] }
+    show { only ['Response', 'WebSurvey'] }
+    edit { only ['WebSurvey'] }
 
     delete
-
+    bulk_delete
     show_in_app
   end
 
-  config.model 'Respondent' do
-    navigation_label 'Surveys'
-    weight -1
-
-    list do
-      include_fields :name,
-                     :created_at
-
-      field :name do
-        pretty_value do
-          responses = bindings[:object].responses
-          response_id = responses.first ? responses.first.id : ''
-
-          path = "/admin/response/#{response_id}"
-          bindings[:view].content_tag :a, "#{bindings[:object].name}" , href: path
-        end
-      end
-    end
-  end
-
+  #
+  # Question
+  #
   config.model 'Question' do
-    list do
-      include_fields :question,
-                     :is_default,
-                     :created_at
-    end
+    include_fields :question,
+                   :question_type
 
     edit do
-      exclude_fields :answers,
-                     :is_default,
-                     :questions_web_surveys,
-                     :web_surveys
-
       field :question_type, :enum do
         enum do
           [['Up to 255 chars',1],['Long answer',2]]
@@ -77,23 +36,43 @@ RailsAdmin.config do |config|
     end
   end
 
-  config.model 'Response' do
-    configure :name do
-      pretty_value do
-        path = "/admin/response/#{bindings[:object].id}"
-        bindings[:view].content_tag :a, "#{bindings[:object].respondent.name}" , href: path, target: '_blank'
-      end
-
-      read_only true
-    end
+  #
+  # Respondent
+  #
+  config.model 'Respondent' do
+    include_fields :name
 
     list do
-      include_fields :web_survey,
-                     :name,
-                     :created_at
-    end
+      field :name do
+        pretty_value do
+          responses = bindings[:object].responses
+          response_id = responses.first ? responses.first.id : ''
 
+          path = "/admin/response/#{response_id}"
+          bindings[:view].content_tag :a, "#{bindings[:object].name.presence || '(No Name)'}" , href: path
+        end
+      end
+
+      field :responses do
+        pretty_value do
+          responses = bindings[:object].responses
+          web_survey_id = responses.first ? responses.first.web_survey.id : nil
+          web_survey_title = responses.first ? (responses.first.web_survey.title.presence || 'Untitled Survey') : nil
+
+          path = "/admin/web_survey/#{web_survey_id}"
+          bindings[:view].content_tag :a, "#{web_survey_title}" , href: path, target: '_blank'
+        end
+      end
+    end
+  end
+
+  #
+  # response
+  #
+  config.model 'Response' do
     show do
+      field :web_survey
+
       field :name do
         formatted_value{ bindings[:object].respondent.name }
       end
@@ -109,10 +88,10 @@ RailsAdmin.config do |config|
     end
   end
 
+  #
+  # Web Survey
+  #
   config.model 'WebSurvey' do
-    navigation_label 'Surveys'
-    weight -1
-
     configure :response_count do
       pretty_value do
         path = "/admin/web_survey/#{bindings[:object].id}"
@@ -122,63 +101,77 @@ RailsAdmin.config do |config|
       read_only true
     end
 
-    list do
-      include_fields :title,
-                     :response_count,
-                     :created_at
+    field :title do
+      pretty_value do
+        path = "/admin/web_survey/#{bindings[:object].id}"
+        bindings[:view].content_tag :a, "#{bindings[:object].title.presence || 'Untitled Survey'}" , href: path
+      end
+    end
 
-      field :shortlink_slug do
-        pretty_value do
-          path = "/web_survey/#{bindings[:object].shortlink_slug}"
-          bindings[:view].content_tag :a, "#{bindings[:object].shortlink_slug}" , href: path, target: '_blank'
-        end
+    field :questions do
+      associated_collection_scope do
+        web_survey = bindings[:objects]
+        Proc.new { |scope|
+          scope = scope.where(is_default: false)
+        }
+      end
+    end
+
+    field :shortlink_slug do
+      pretty_value do
+        path = "/web_survey/#{bindings[:object].shortlink_slug}"
+        bindings[:view].content_tag :a, "#{bindings[:object].shortlink_slug}" , href: path, target: '_blank'
+      end
+    end
+
+    configure :preview_questions do
+      pretty_value do
+        bindings[:view].render(
+          partial: "web_survey_new_questions",
+          locals: { web_survey: bindings[:object] }
+        )
       end
 
+      read_only true
+    end
+
+    list do
+      exclude_fields :questions
+      include_fields :response_count, :shortlink_slug
     end
 
     edit do
-      include_fields :title,
-                     :questions
+      include_fields :preview_questions
+    end
 
-      # Don't include default questions in options
-      field :questions do
-        associated_collection_scope do
-          web_survey = bindings[:objects]
-          Proc.new { |scope|
-            scope = scope.where(is_default: false)
-          }
-        end
+    create do
+      include_fields :preview_questions
+
+      fields do
+        help false
       end
     end
 
     show do
-      field :title
+      include_fields :title, :shortlink_slug
 
-      field :shortlink_slug do
+      field :questions do
         pretty_value do
-          path = "/web_survey/#{bindings[:object].shortlink_slug}"
-          bindings[:view].content_tag :a, "#{bindings[:object].shortlink_slug}" , href: path, target: '_blank'
+          bindings[:view].render(
+            partial: "web_survey_show_questions",
+            locals: { web_survey: bindings[:object] }
+          )
         end
       end
 
       field :responses do
         pretty_value do
           bindings[:view].render(
-            partial: "formatted_responses",
+            partial: "web_survey_show_responses",
             locals: { web_survey: bindings[:object] }
           )
         end
       end
-    end
-  end
-
-  config.model 'User' do
-    edit do
-      include_fields :username,
-                     :email,
-                     :is_admin,
-                     :password,
-                     :password_confirmation
     end
   end
 end

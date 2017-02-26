@@ -4,6 +4,7 @@ class Question < ActiveRecord::Base
   has_many :answers
 
   scope :ordered, -> { order('id') }
+  scope :default, -> { where(is_default: true) }
   scope :non_default, -> { where(is_default: false) }
 
   QUESTION_TYPES = {
@@ -15,6 +16,6 @@ class Question < ActiveRecord::Base
     QUESTION_TYPES[self.question_type]
   end
 
-  # For use in rails_admin so "Question#id" shows us the actual question instead
+  # For use in rails_admin
   def name; self.question; end
 end

@@ -5,7 +5,7 @@ class WebSurveyController < ApplicationController
     if @web_survey
 
       @response = @web_survey.responses.build
-      @web_survey.questions.each { |q| @response.answers.build(question: q) }
+      @web_survey.questions.ordered.each { |q| @response.answers.build(question: q) }
 
       render :new_response
     else

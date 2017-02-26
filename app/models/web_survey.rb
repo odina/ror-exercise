@@ -5,7 +5,7 @@ class WebSurvey < ActiveRecord::Base
   has_many :questions, -> { uniq }, through: :questions_web_surveys
 
   after_create :generate_slug
-  after_create :save_default_questions
+  after_save :save_default_questions
 
   validate :max_2_custom_questions
   validates_uniqueness_of :shortlink_slug
@@ -25,12 +25,12 @@ class WebSurvey < ActiveRecord::Base
   private
 
   def save_default_questions
-    default_questions = Question.where is_default: true
-    default_questions.each { |q| self.questions << q }
+    default_questions = Question.default
+    default_questions.each { |q| self.questions << q unless self.questions.include?(q) }
   end
 
   def generate_slug
-    slug = self.title.presence || ''
+    slug = self.title.presence || 'untitled'
     slug += "-%s" % SecureRandom.hex
 
     self.shortlink_slug = slug

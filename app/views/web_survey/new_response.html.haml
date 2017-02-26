@@ -20,7 +20,7 @@
               = g.label "#{g.object.question.question} *", class: "control-label"
 
               - if not g.object.question.is_default?
-                <sup class="question-by-admin glyphicon glyphicon-info-sign" data-toggle='tooltip' title='This question was added by the administrator'></sup>
+                %sup.question-by-admin.glyphicon.glyphicon-info-sign{ 'data-toggle': 'tooltip', title: 'This question was added by the administrator' }
 
             .col-sm-9
               - if g.object.question.type == 'text_area'
@@ -35,8 +35,3 @@
 
     .survey-subtext
       © Powered by Web Survey
-
-:javascript
-  $(function() {
-    $('#new-response-form').validate();
-  });

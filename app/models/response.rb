@@ -5,6 +5,8 @@ class Response < ActiveRecord::Base
 
   accepts_nested_attributes_for :answers, :respondent
 
+  scope :ordered_by_name, -> { joins(:respondent).order('LOWER(respondents.name), respondents.id') }
+
   def answers_attributes=(attributes)
     attributes.each_value do |params|
       answer = self.answers.build params

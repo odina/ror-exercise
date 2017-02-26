@@ -16,7 +16,8 @@
       color: red;
     }
 
-    input:placeholder-shown {
+    input:placeholder-shown,
+    textarea:placeholder-shown {
       color: #cccccc;
       font-size: 11px;
       font-style: italic;

@@ -72,3 +72,24 @@
     padding: 8px 0;
   }
 }
+
+#response-submitted {
+  align-items: center;
+  display: flex;
+  height: 100%;
+  text-align: center;
+
+  .response-submitted-container {
+    margin: auto;
+    padding: 0;
+  }
+
+  .response-submitted-header {
+    font-family: 'Baloo', cursive;
+    font-size: 24px;
+  }
+
+  .response-submitted-body {
+    line-height: 2.5em;
+  }
+}

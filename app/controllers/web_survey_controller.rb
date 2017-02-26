@@ -10,7 +10,7 @@ class WebSurveyController < ApplicationController
       render :new_response
     else
       flash[:error] = "No such survey exists!"
-      redirect_to root_path
+      redirect_to thank_you_path
     end
   end
 
@@ -19,11 +19,15 @@ class WebSurveyController < ApplicationController
 
     if @response.save
       flash[:success] = 'Your answers have been submitted!'
-      redirect_to root_path
+      redirect_to thank_you_path
     else
       flash[:error] = @response.errors.full_messages.to_sentence
       render :new_response
     end
+  end
+
+  def thank_you
+    @other_surveys = WebSurvey.recent.limit 10
   end
 
   private

@@ -1,0 +1,12 @@
+#response-submitted
+  .response-submitted-container.col-md-6.col-xl-4
+    .response-submitted-header
+      - if flash[:success]
+        Thank you for answering our survey!
+
+    .response-submitted-body
+      Perhaps you would like to answer more of our surveys:
+
+      - @other_surveys.each do |survey|
+        %div
+          %b= link_to survey.web_survey_title, new_response_path(slug: survey.shortlink_slug), target: '_blank'

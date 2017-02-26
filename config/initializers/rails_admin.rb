@@ -45,19 +45,22 @@ RailsAdmin.config do |config|
     list do
       field :name do
         pretty_value do
-          responses = bindings[:object].responses
+          respondent = bindings[:object]
+          responses = respondent.responses
           response_id = responses.first ? responses.first.id : ''
+          respondent_name = respondent.name.presence || "Anonymous # #{respondent.id}"
 
           path = "/admin/response/#{response_id}"
-          bindings[:view].content_tag :a, "#{bindings[:object].name.presence || '(No Name)'}" , href: path
+          bindings[:view].content_tag :a, respondent_name , href: path
         end
       end
 
       field :responses do
         pretty_value do
           responses = bindings[:object].responses
+
           web_survey_id = responses.first ? responses.first.web_survey.id : nil
-          web_survey_title = responses.first ? (responses.first.web_survey.title.presence || 'Untitled Survey') : nil
+          web_survey_title = responses.first ? (responses.first.web_survey.title.presence || "Untitled Survey # #{responses.first.web_survey.id}") : nil
 
           path = "/admin/web_survey/#{web_survey_id}"
           bindings[:view].content_tag :a, "#{web_survey_title}" , href: path, target: '_blank'
@@ -103,8 +106,11 @@ RailsAdmin.config do |config|
 
     field :title do
       pretty_value do
+        web_survey = bindings[:object]
+        web_survey_name = web_survey.title.presence || "Untitled Survey # #{web_survey.id}"
+
         path = "/admin/web_survey/#{bindings[:object].id}"
-        bindings[:view].content_tag :a, "#{bindings[:object].title.presence || 'Untitled Survey'}" , href: path
+        bindings[:view].content_tag :a, web_survey_name, href: path
       end
     end
 
@@ -162,7 +168,7 @@ RailsAdmin.config do |config|
 
       field :title do
         pretty_value do
-          bindings[:object].title.presence || 'Untitled Survey'
+          bindings[:object].title.presence || "Untitled Survey # #{bindings[:object].id}'"
         end
       end
 

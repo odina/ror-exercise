@@ -16,9 +16,9 @@ class Response < ActiveRecord::Base
   end
 
   def respondent_name
-    respondent.name
+    respondent.name.presence || "Anonymous # #{respondent.id}"
   end
 
   # For use in rails_admin
-  def name; self.respondent_name.presence || '(No Name)' ; end
+  def name; self.respondent_name; end
 end

@@ -11,6 +11,7 @@ class WebSurvey < ActiveRecord::Base
   validates_uniqueness_of :shortlink_slug
 
   scope :all_with_slug, -> (slug) { where(shortlink_slug: slug) }
+  scope :recent, -> { order('created_at DESC') }
 
   def self.with_slug(slug)
     self.all_with_slug(slug).first
@@ -20,6 +21,10 @@ class WebSurvey < ActiveRecord::Base
     if self.questions.non_default.count > 2
       errors.add :questions, "can't be more than 2"
     end
+  end
+
+  def web_survey_title
+    self.title.presence || "Untitled Survey # #{self.id}"
   end
 
   private

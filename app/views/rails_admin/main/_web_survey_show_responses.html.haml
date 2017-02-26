@@ -7,7 +7,7 @@
 
   %p
     %b
-      - name = response.respondent.name.presence || '(No Name)'
+      - name = response.respondent_name
       = link_to "#{index+1}. #{name}", 'javascript:void(0);', class: 'respondent', 'response-id': response.id
 
     %div{ id: "answers-for-#{response.id}", class: 'answers', style: 'display:none;' }

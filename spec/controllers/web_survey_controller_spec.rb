@@ -1,24 +1,27 @@
 require 'rails_helper'
 
 describe WebSurveyController do
-  describe '#answer' do
-    let(:survey) { create :web_survey }
+  let(:survey) { create :web_survey }
 
+  describe '#new_response' do
     context 'GET request' do
       it 'should allow get requests' do
-        get :answer, slug: survey.shortlink_slug
+        get :new_response, slug: survey.shortlink_slug
 
         expect(response.status).to eq(200)
       end
 
       it 'should redirect on invalid survey slug' do
-        get :answer, slug: 'this-is-invalid'
+        get :new_response, slug: 'this-is-invalid'
 
         expect(response.status).to eq(302)
         expect(flash[:error]).to_not be_nil
       end
     end
+  end
 
+
+  describe '#create_response' do
     context 'POST request' do
       let(:respondent) { create :respondent }
 
@@ -33,15 +36,15 @@ describe WebSurveyController do
       end
 
       it 'should allow post requests' do
-        post :answer, slug: survey.shortlink_slug, response: response_params
+        post :create_response, slug: survey.shortlink_slug, response: response_params
 
         expect(response.status).to eq(302)
         expect(flash[:success]).to_not be_nil
       end
 
       it "shows error when form contains data that can't be saved" do
-        post :answer, slug: survey.shortlink_slug,
-                      response: response_with_invalid_answers
+        post :create_response, slug: survey.shortlink_slug,
+                               response: response_with_invalid_answers
 
         expect(response.status).to eq(200)
         expect(flash[:error]).to_not be_nil

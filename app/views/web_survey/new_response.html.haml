@@ -5,7 +5,7 @@
 
 
     .survey-body
-      = form_for @response, url: answer_web_survey_path, method: :POST do |f|
+      = form_for @response, url: create_response_path, method: :POST do |f|
         = f.fields_for :respondent, Respondent.new do |r|
           .form-group.row
             .col-sm-3

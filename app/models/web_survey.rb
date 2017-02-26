@@ -5,7 +5,7 @@ class WebSurvey < ActiveRecord::Base
   has_many :questions, -> { uniq }, through: :questions_web_surveys
 
   after_create :generate_slug
-  after_save :save_default_questions
+  after_create :save_default_questions
 
   validate :max_2_custom_questions
   validates_uniqueness_of :shortlink_slug

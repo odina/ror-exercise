@@ -11,6 +11,18 @@
     font-size: 12px;
   }
 
+  form {
+    .error {
+      color: red;
+    }
+
+    input:placeholder-shown {
+      color: #cccccc;
+      font-size: 11px;
+      font-style: italic;
+    }
+  }
+
   .question-by-admin {
     &:hover {
       opacity: 0.8

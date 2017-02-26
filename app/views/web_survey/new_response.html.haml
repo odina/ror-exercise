@@ -5,11 +5,11 @@
 
 
     .survey-body
-      = form_for @response, url: create_response_path, method: :POST do |f|
+      = form_for @response, url: create_response_path, method: :POST, html: { id: 'new-response-form' } do |f|
         = f.fields_for :respondent, Respondent.new do |r|
           .form-group.row
             .col-sm-3
-              = r.label 'Your name (Optional)', class: "control-label"
+              = r.label 'Your name', class: "control-label"
 
             .col-sm-9
               = r.text_field :name, autofocus: true, class: 'form-control'
@@ -17,16 +17,16 @@
         = f.fields_for :answers, @response.answers do |g|
           .form-group.row
             .col-sm-3
-              = g.label g.object.question.question, class: "control-label"
+              = g.label "#{g.object.question.question} *", class: "control-label"
 
               - if not g.object.question.is_default?
                 <sup class="question-by-admin glyphicon glyphicon-info-sign" data-toggle='tooltip' title='This question was added by the administrator'></sup>
 
             .col-sm-9
               - if g.object.question.type == 'text_area'
-                = g.text_area :answer, class: 'form-control'
+                = g.text_area :answer, class: 'form-control', required: true, placeholder: 'Type your answer here...'
               - else
-                = g.text_field :answer, class: 'form-control'
+                = g.text_field :answer, class: 'form-control', required: true, placeholder: 'Type your answer here...'
 
           = g.hidden_field :question_id, value: g.object.question.id
 
@@ -35,3 +35,8 @@
 
     .survey-subtext
       © Powered by Web Survey
+
+:javascript
+  $(function() {
+    $('#new-response-form').validate();
+  });

@@ -1,5 +1,5 @@
 #survey.row
-  .survey-container.col-md-4
+  .survey-container.col-md-6.col-xl-4
     .survey-header
       = @web_survey.title.presence || 'Untitled Survey'
 
@@ -8,21 +8,24 @@
       = form_for @response, url: create_response_path, method: :POST, html: { id: 'new-response-form' } do |f|
         = f.fields_for :respondent, Respondent.new do |r|
           .form-group.row
-            .col-sm-3
-              = r.label 'Your name', class: "control-label"
+            .col-sm-4
+              %span
+                = r.label 'Your name', class: "control-label"
+              %span.optional-label
+                (Optional)
 
-            .col-sm-9
+            .col-sm-8
               = r.text_field :name, autofocus: true, class: 'form-control'
 
         = f.fields_for :answers, @response.answers do |g|
           .form-group.row
-            .col-sm-3
+            .col-sm-4
               = g.label "#{g.object.question.question} *", class: "control-label"
 
               - if not g.object.question.is_default?
                 %sup.question-by-admin.glyphicon.glyphicon-info-sign{ 'data-toggle': 'tooltip', title: 'This question was added by the administrator' }
 
-            .col-sm-9
+            .col-sm-8
               - if g.object.question.type == 'text_area'
                 = g.text_area :answer, class: 'form-control', required: true, placeholder: 'Type your answer here...'
               - else

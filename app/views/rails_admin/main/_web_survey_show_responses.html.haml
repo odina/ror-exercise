@@ -1,7 +1,7 @@
 - responses = web_survey.responses.joins(:respondent).order('respondents.name')
 
 %i.response-help-text
-  Click on the respondent's names to show their answers
+  Click on the respondents' names to show their answers
 
 - responses.each_with_index do |response, index|
 

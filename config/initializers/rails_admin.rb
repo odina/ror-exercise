@@ -141,7 +141,12 @@ RailsAdmin.config do |config|
     end
 
     edit do
+      exclude_fields :shortlink_slug
       include_fields :survey_preview
+
+      fields do
+        help false
+      end
     end
 
     create do
@@ -154,6 +159,12 @@ RailsAdmin.config do |config|
 
     show do
       include_fields :title, :shortlink_slug
+
+      field :title do
+        pretty_value do
+          bindings[:object].title.presence || 'Untitled Survey'
+        end
+      end
 
       field :questions do
         pretty_value do
